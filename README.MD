@@ -84,12 +84,18 @@ QR Flow	Query parameter table mapping
 ## 📁 Project Structure
   digital-dining/
   │
-  #####├── main.py                     # Complete Flask backend
-  #####├── templates/                  # HTML pages
-  #####├── static/                     # CSS / JS / images
-  #####├── .env                        # API keys & DB credentials
-  #####├── README.md                   # Documentation
-  #####└── requirements.txt            # Dependencies
+  
+  ├── main.py                     # Complete Flask backend
+  
+  ├── templates/                  # HTML pages
+  
+  ├── static/                     # CSS / JS / images
+  
+  ├── .env                        # API keys & DB credentials
+    
+  ├── README.md                   # Documentation
+  
+  └── requirements.txt            # Dependencies
 
 ## 🛠 Installation & Setup
 1️⃣ Install Dependencies
@@ -288,9 +294,11 @@ Push notifications
 
 Developer:
 Parth Singh (backend) 
+
 Pranshu Singla (frontend)
 
 # 🏁 Conclusion
 
 Digital Dining is a full-fledged, production-style restaurant ordering system designed with scalability, clean architecture, and practical usability. This documentation ensures clean understanding for both academic evaluation and real deployment.#
+
 
