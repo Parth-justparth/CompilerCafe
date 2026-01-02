@@ -290,15 +290,10 @@ Customer analytics dashboard
 
 Push notifications
 
-# 👨‍💻 Contributors
-
-Developer:
-Parth Singh (backend) 
-
-Pranshu Singla (frontend)
 
 # 🏁 Conclusion
 
 Digital Dining is a full-fledged, production-style restaurant ordering system designed with scalability, clean architecture, and practical usability. This documentation ensures clean understanding for both academic evaluation and real deployment.#
+
 
 
