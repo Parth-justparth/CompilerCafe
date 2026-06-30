@@ -208,6 +208,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
   name VARCHAR(250) NOT NULL,
   description TEXT,
   price DOUBLE NOT NULL,
+  photo_url VARCHAR(500),
   category_id INT,
   is_available TINYINT(1) DEFAULT 1,
   FOREIGN KEY (category_id) REFERENCES menu_categories(id) ON DELETE SET NULL
@@ -1211,11 +1212,16 @@ def manager_seed_demo_menu():
         ("gulab_jamun_jalwa.jpg", "Desserts", "Gulab Jamun Jalwa", 99)
     ]
 
+    try:
+        execute("ALTER TABLE menu_items ADD COLUMN photo_url VARCHAR(500)")
+    except:
+        pass # Column already exists
+
     for img, cat_name, title, price in items:
         execute("""
-            INSERT INTO menu_items (category_id, name, description, price, image_url, is_available)
+            INSERT INTO menu_items (category_id, name, description, price, photo_url, is_available)
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (cat_ids[cat_name], title, "Delicious " + title, price, "menu/" + img, 1))
+        """, (cat_ids[cat_name], title, "Delicious " + title, price, img, 1))
 
     flash("Successfully seeded menu items from static images!", "success")
     return redirect(url_for("manager_menu_page"))
