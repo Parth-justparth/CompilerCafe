@@ -1152,6 +1152,74 @@ def manager_dashboard():
     
     return render_template("manager_dashboard.html", last_orders=last_orders)
 
+
+@app.route("/manager/seed_demo_menu")
+@login_required
+def manager_seed_demo_menu():
+    if not is_manager():
+        flash("Manager only", "danger")
+        return redirect(url_for("manager_login"))
+    
+    # Check if menu already has items
+    existing = fetch_one("SELECT COUNT(*) as c FROM menu_items")
+    if existing and existing["c"] > 0:
+        flash("Menu already has items. Clear them first if you want to re-seed.", "warning")
+        return redirect(url_for("manager_menu_page"))
+    
+    # 1. Insert Categories
+    categories = ["Indian / Desi", "Fast Food & Pizza", "Asian & Noodles", "Beverages", "Desserts"]
+    cat_ids = {}
+    for i, cat in enumerate(categories):
+        cid = execute("INSERT INTO menu_categories (name, display_order) VALUES (%s, %s)", (cat, i))
+        cat_ids[cat] = cid
+
+    # 2. Insert Items
+    items = [
+        ("aloo_sabzi.jpg", "Indian / Desi", "Aloo Sabzi", 150),
+        ("dal_makhani.jpg", "Indian / Desi", "Dal Makhani", 220),
+        ("chole_chapo.jpg", "Indian / Desi", "Chole Chapo", 180),
+        ("naan_stop.jpg", "Indian / Desi", "Naan Stop", 40),
+        ("paneer_pappi_roll.jpg", "Indian / Desi", "Paneer Pappi Roll", 120),
+
+        ("cheesy_aakhri_pasta.jpg", "Fast Food & Pizza", "Cheesy Aakhri Pasta", 250),
+        ("cheesy_aashiq_pizza.jpg", "Fast Food & Pizza", "Cheesy Aashiq Pizza", 350),
+        ("paneer_on_vacation_pizza.jpg", "Fast Food & Pizza", "Paneer On Vacation Pizza", 399),
+        ("gyaani_garlic_bread.jpg", "Fast Food & Pizza", "Gyaani Garlic Bread", 149),
+
+        ("k-pop_noodles.jpg", "Asian & Noodles", "K-Pop Noodles", 299),
+        ("nikamme_noodles.jpg", "Asian & Noodles", "Nikamme Noodles", 199),
+        ("ninja_noodles.jpg", "Asian & Noodles", "Ninja Noodles", 249),
+        ("ramen_bhai_bowl.jpg", "Asian & Noodles", "Ramen Bhai Bowl", 349),
+        ("spicy_ramen_challenge_accepted.jpg", "Asian & Noodles", "Spicy Ramen Challenge", 399),
+        ("kimchi_kaka.jpg", "Asian & Noodles", "Kimchi Kaka", 120),
+        ("manchurian_bhau.jpg", "Asian & Noodles", "Manchurian Bhau", 180),
+        ("pookie_dumplings.jpg", "Asian & Noodles", "Pookie Dumplings", 199),
+        ("samurai_sandwich_sushi.jpg", "Asian & Noodles", "Samurai Sandwich Sushi", 499),
+        ("schezwan_shaitan.jpg", "Asian & Noodles", "Schezwan Shaitan", 150),
+        ("shaan-e-momos.jpg", "Asian & Noodles", "Shaan-E-Momos", 120),
+        ("tokyo_tapri_roll.jpg", "Asian & Noodles", "Tokyo Tapri Roll", 180),
+        ("wasabi_wala_kick.jpg", "Asian & Noodles", "Wasabi Wala Kick", 99),
+
+        ("blue_wala_sharbat.jpg", "Beverages", "Blue Wala Sharbat", 149),
+        ("chatakedaar_nimbu_shock.jpg", "Beverages", "Chatakedaar Nimbu Shock", 99),
+        ("mango_masti_drink.jpg", "Beverages", "Mango Masti Drink", 120),
+        ("mojito_machaayenge.jpg", "Beverages", "Mojito Machaayenge", 150),
+
+        ("cake_wala_crush.jpg", "Desserts", "Cake Wala Crush", 250),
+        ("chocolate_tod-fod.jpg", "Desserts", "Chocolate Tod-Fod", 299),
+        ("donut_maja_ma.jpg", "Desserts", "Donut Maja Ma", 150),
+        ("gulab_jamun_jalwa.jpg", "Desserts", "Gulab Jamun Jalwa", 99)
+    ]
+
+    for img, cat_name, title, price in items:
+        execute("""
+            INSERT INTO menu_items (category_id, name, description, price, image_url, is_available)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (cat_ids[cat_name], title, "Delicious " + title, price, "menu/" + img, 1))
+
+    flash("Successfully seeded menu items from static images!", "success")
+    return redirect(url_for("manager_menu_page"))
+
 @app.route("/manager/menu")
 @login_required
 def manager_menu_page():
