@@ -1564,7 +1564,11 @@ def payment_confirm(session_id):
 # -----------------------------
 # create schema & seed defaults (DB must exist)
 # Running this globally ensures tables are created when gunicorn imports main.py
-create_schema_and_seed()
+try:
+    if not os.getenv("VERCEL"):
+        create_schema_and_seed()
+except Exception as e:
+    print("Skipping DB init on Vercel or caught error:", e)
 print("✅ Ready. DB:", DB_NAME, "User:", DB_USER)
 
 if __name__ == "__main__":
