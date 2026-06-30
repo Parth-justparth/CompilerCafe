@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE TABLE IF NOT EXISTS order_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT NOT NULL,
-  menu_item_id INT NOT NULL,
+  menu_item_id INT,
   name VARCHAR(250) NOT NULL,
   quantity INT DEFAULT 1,
   price_each DOUBLE NOT NULL,
