@@ -63,6 +63,7 @@ login_manager.login_view = "staff_login"
 
 # DB config (XAMPP settings confirmed)
 DB_HOST = os.getenv("DB_HOST", "")
+DB_PORT = int(os.getenv("DB_PORT", 3306))
 DB_USER = os.getenv("DB_USER", "root")
 DB_PASS = os.getenv("DB_PASS", "")
 DB_NAME = os.getenv("DB_NAME", "digital_dining")
@@ -75,13 +76,18 @@ SMTP_PASS = os.getenv("SMTP_PASS", "YOUR EMAIL CODE HERE")
 # DB helpers (pymysql)
 # -----------------------------
 def get_db():
+    # Note: Aiven requires SSL, so we include a generic ssl parameter
+    # which tells PyMySQL to try negotiating SSL if the server requires it.
+    ssl_args = {"ssl": {}} if "aivencloud.com" in DB_HOST else None
     return pymysql.connect(
         host=DB_HOST,
+        port=DB_PORT,
         user=DB_USER,
         password=DB_PASS,
         database=DB_NAME,
         cursorclass=pymysql.cursors.DictCursor,
-        autocommit=True
+        autocommit=True,
+        ssl=ssl_args
     )
 
 def fetch_one(query, params=()):
