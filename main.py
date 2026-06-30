@@ -1562,8 +1562,10 @@ def payment_confirm(session_id):
 # -----------------------------
 # Launch app
 # -----------------------------
+# create schema & seed defaults (DB must exist)
+# Running this globally ensures tables are created when gunicorn imports main.py
+create_schema_and_seed()
+print("✅ Ready. DB:", DB_NAME, "User:", DB_USER)
+
 if __name__ == "__main__":
-    # create schema & seed defaults (DB must exist)
-    create_schema_and_seed()
-    print("✅ Ready. DB:", DB_NAME, "User:", DB_USER)
     app.run(host="0.0.0.0", port=5000, debug=True)
